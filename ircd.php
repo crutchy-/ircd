@@ -32,22 +32,22 @@ date_default_timezone_set("UTC");
 $server=socket_create(AF_INET,SOCK_STREAM,SOL_TCP);
 if ($server===False)
 {
-  echo "socket_create() failed: reason: ".socket_strerror(socket_last_error())."\n";
+  echo "*** socket_create() failed: reason: ".socket_strerror(socket_last_error())."\n";
   return;
 }
 if (socket_get_option($server,SOL_SOCKET,SO_REUSEADDR)===False)
 {
-  echo "socket_get_option() failed: reason: ".socket_strerror(socket_last_error($server))."\n";
+  echo "*** socket_get_option() failed: reason: ".socket_strerror(socket_last_error($server))."\n";
   return;
 }
 if (@socket_bind($server,LISTEN_ADDRESS,LISTEN_PORT)===False)
 {
-  echo "socket_bind() failed: reason: ".socket_strerror(socket_last_error($server))."\n";
+  echo "*** socket_bind() failed: reason: ".socket_strerror(socket_last_error($server))."\n";
   return;
 }
 if (socket_listen($server,5)===False)
 {
-  echo "socket_listen() failed: reason: ".socket_strerror(socket_last_error($server))."\n";
+  echo "*** socket_listen() failed: reason: ".socket_strerror(socket_last_error($server))."\n";
   return;
 }
 $clients=array($server);

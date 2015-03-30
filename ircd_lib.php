@@ -7,7 +7,7 @@ function connection_index($client_index,$suppress_error=False)
   global $connections;
   foreach ($connections as $index => $data)
   {
-    if (in_array($client_index,$connections[$index]["client_index"])==True)
+    if ($connections[$index]["client_index"]==$client_index)
     {
       return $index;
     }
@@ -27,7 +27,7 @@ function connection_nick($client_index,&$connection,$suppress_error=False)
   global $nicks;
   foreach ($nicks as $nick => $data)
   {
-    if ($nicks[$nick]["connection"]===$connection)
+    if (in_array($connection,$nicks[$nick]["connection"])==True)
     {
       return $nick;
     }
@@ -213,6 +213,8 @@ function parse_data_basic($data)
   $result["nick"]="";
   $result["user"]="";
   $result["hostname"]="";
+  $result["connection_id"]="";
+  $result["connection_id_nick"]="";
   if (substr($sub,0,1)==":") # prefix found
   {
     $i=strpos($sub," ");
@@ -253,6 +255,12 @@ function parse_data_basic($data)
       $result["user"]=substr($prefix,0,$i);
       $prefix=substr($prefix,$i+1);
       $result["hostname"]=$prefix;
+    }
+    $nick_len=strlen($result["nick"]);
+    if ($nick_len>CONNECTION_ID_LEN)
+    {
+      $result["connection_id"]=substr($result["nick"],$nick_len-CONNECTION_ID_LEN);
+      $result["connection_id_nick"]=substr($result["nick"],0,$nick_len-CONNECTION_ID_LEN);
     }
   }
   return $result;
