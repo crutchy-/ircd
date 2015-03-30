@@ -260,4 +260,17 @@ function parse_data_basic($data)
 
 #####################################################################################################
 
+function random_string($count,$allowable="abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789")
+{
+  $L=strlen($allowable)-1;
+  $result="";
+  for ($i=1;$i<=$count;$i++)
+  {
+    $result=$result.$allowable[mt_rand(0,$L)];
+  }
+  return $result;
+}
+
+#####################################################################################################
+
 ?>

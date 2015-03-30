@@ -2,8 +2,6 @@
 
 #####################################################################################################
 
-# TODO: MAKE INTO A SEPARATE GITHUB REPOSITORY
-
 /*
 sudo lsof -i
 sudo netstat -lptu
@@ -17,6 +15,7 @@ define("CLIENT_TIMEOUT",60); # seconds
 
 define("SERVER_HOSTNAME","sylnt.us.to");
 define("MAX_DATA_LEN",1024);
+define("CONNECTION_ID_LEN",40);
 
 require_once("include.php");
 require_once("ircd_lib.php");
