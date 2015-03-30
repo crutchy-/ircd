@@ -63,6 +63,21 @@ function client_nick($client_index,$suppress_error=False)
 
 #####################################################################################################
 
+function nick_connection($client_index,$nick)
+{
+  global $nicks;
+  for ($i=0;$i<count($nicks[$nick]["connection"]);$i++)
+  {
+    if ($nicks[$nick]["connection"][$i]["client_index"]==$client_index)
+    {
+      return $nicks[$nick]["connection"][$i];
+    }
+  }
+  return False;
+}
+
+#####################################################################################################
+
 function loop_process()
 {
   # do other stuff here if need be
