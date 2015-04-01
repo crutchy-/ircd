@@ -5,10 +5,12 @@
 function cmd_user($client_index,$items)
 {
   global $nicks;
+  global $connections;
   # USER crutchy crutchy 192.168.0.21 :crutchy
-  # USER <username> <hostname> <servername> :<realname>
-  $nick=client_nick($client_index);
-  if ($nick===False)
+  # USER <username>[<connection id>] <hostname> <servername> :<realname>
+  $nick=client_nick($client_index,False,False);
+  $conn=connection_index($client_index);
+  if (($nick===False) or ($conn===False))
   {
     return;
   }
@@ -18,13 +20,35 @@ function cmd_user($client_index,$items)
     do_reply($client,"ERROR: INCORRECT NUMBER OF PARAMS (NUMERIC 461)");
     return;
   }
-  $nicks[$nick]["username"]=$param_parts[0];
-  $nicks[$nick]["hostname"]=$param_parts[1];
-  $nicks[$nick]["servername"]=$param_parts[2];
-  $nicks[$nick]["realname"]=$items["trailing"];
-  $nicks[$nick]["prefix"]=$nick."!".$nicks[strtolower($nick)]["connection"]["ident_prefix"].$nicks[strtolower($nick)]["username"]."@".$nicks[strtolower($nick)]["hostname"];
+  $connection=$connections[$conn];
+  if ($connection["authenticated"]==False)
+  {
+    $username=substr($param_parts[0],0,strlen($param_parts[0])-CONNECTION_ID_LEN);
+    $conn_id=substr($param_parts[0],strlen($param_parts[0])-CONNECTION_ID_LEN);
+    if ($nicks[$nick]["connection_id"]==$conn_id)
+    {
+      $connections[$conn]["authenticated"]=True;
+    }
+    else
+    {
+      do_reply($client,"ERROR: CONNECTION ID MISMATCH");
+      return;
+    }
+  }
+  else
+  {
+    $username=$param_parts[0];
+  }
+  if (isset($nicks[$nick]["prefix"])==False)
+  {
+    $nicks[$nick]["username"]=$username;
+    $nicks[$nick]["hostname"]=$param_parts[1];
+    $nicks[$nick]["servername"]=$param_parts[2];
+    $nicks[$nick]["realname"]=$items["trailing"];
+    $nicks[$nick]["prefix"]=$nick."!".$connection["ident_prefix"].$nicks[$nick]["username"]."@".$nicks[$nick]["hostname"];
+  }
   var_dump($nicks);
-  $addr=$nicks[strtolower($nick)]["connection"]["addr"];
+  $addr=$connection["addr"];
   broadcast("*** USER MESSAGE RECEIVED FROM $addr");
 }
 

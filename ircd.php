@@ -13,7 +13,7 @@ define("LISTEN_ADDRESS","192.168.1.197");
 define("LISTEN_PORT",6667);
 define("CLIENT_TIMEOUT",60); # seconds
 
-define("SERVER_HOSTNAME","sylnt.us.to");
+define("SERVER_HOSTNAME","crutchy.local");
 define("MAX_DATA_LEN",1024);
 define("CONNECTION_ID_LEN",40);
 
@@ -108,6 +108,7 @@ while (True)
       echo "$data received\n";
       if ($data=="quit")
       {
+        socket_shutdown($read_client,2);
         socket_close($read_client);
         unset($clients[$client_index]);
         break;
@@ -116,6 +117,7 @@ while (True)
       {
         if ($clients[$client_index]<>$server)
         {
+          socket_shutdown($clients[$client_index],2);
           socket_close($clients[$client_index]);
           unset($clients[$client_index]);
         }
@@ -124,10 +126,11 @@ while (True)
     }
     $addr="";
     socket_getpeername($read_client,$addr);
-    broadcast("$addr: $data");
+    #broadcast("$addr: $data");
     on_msg($client_index,$data);
   }
 }
+socket_shutdown($server,2);
 socket_close($server);
 
 #####################################################################################################

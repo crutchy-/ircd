@@ -19,10 +19,19 @@ function cmd_privmsg($client_index,$items)
     $n=count($channels[$chan]["nicks"]);
     for ($i=0;$i<$n;$i++)
     {
-      $index=$nicks[strtolower($nick)]["connection_index"];
-      $prefix=$nicks[strtolower($nick)]["prefix"];
-      $msg=":$prefix PRIVMSG $chan :$trailing";
-      do_reply($index,$msg);
+      $c=count($nicks[$nick]["connection"]);
+      for ($j=0;$j<$c;$j++)
+      {
+        $conn=$nicks[$nick]["connection"][$j];
+        if ($conn["client_index"]<>$client_index)
+        {
+          $msg=construct_message($nick,"PRIVMSG",$chan,$trailing);
+          if ($msg!==False)
+          {
+            do_reply($conn["client_index"],$msg);
+          }
+        }
+      }
     }
   }
 }

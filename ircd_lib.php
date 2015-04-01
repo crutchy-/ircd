@@ -41,13 +41,21 @@ function connection_nick($client_index,&$connection,$suppress_error=False)
 
 #####################################################################################################
 
-function client_nick($client_index,$suppress_error=False)
+function client_nick($client_index,$suppress_error=False,$authenticate=True)
 {
   global $connections;
   global $nicks;
   $connection_index=connection_index($client_index,$suppress_error);
   if ($connection_index===False)
   {
+    return False;
+  }
+  if (($connections[$connection_index]["authenticated"]==False) and ($authenticate==True))
+  {
+    if ($suppress_error==False)
+    {
+      do_reply($client_index,"*** MESSAGE REFUSED: CONNECTION NOT AUTHENTICATED");
+    }
     return False;
   }
   $nick=connection_nick($client_index,$connections[$connection_index],$suppress_error);
@@ -68,7 +76,7 @@ function nick_connection($client_index,$nick)
   global $nicks;
   for ($i=0;$i<count($nicks[$nick]["connection"]);$i++)
   {
-    if ($nicks[$nick]["connection"][$i]["client_index"]==$client_index)
+    if (($nicks[$nick]["connection"][$i]["client_index"]==$client_index) and ($nicks[$nick]["connection"][$i]["authenticated"]==True))
     {
       return $nicks[$nick]["connection"][$i];
     }
@@ -112,6 +120,18 @@ function do_reply($client_index,$msg)
 
 #####################################################################################################
 
+function construct_message($nick,$cmd,$params,$trailing)
+{
+  global $nicks;
+  if (isset($nicks[$nick])==False)
+  {
+    return False;
+  }
+  return ":".$nicks[$nick]["prefix"]." ".strtoupper($cmd)." $params :$trailing";
+}
+
+#####################################################################################################
+
 function on_connect($client_index)
 {
   global $clients;
@@ -126,6 +146,7 @@ function on_connect($client_index)
     $connection["addr"]=$addr;
     $connection["connect_timestamp"]=microtime(True);
     $connection["ident_prefix"]="";
+    $connection["authenticated"]=False;
     $connections[]=$connection;
     broadcast("*** CLIENT CONNECTED: $addr");
   }
@@ -270,12 +291,6 @@ function parse_data_basic($data)
       $result["user"]=substr($prefix,0,$i);
       $prefix=substr($prefix,$i+1);
       $result["hostname"]=$prefix;
-    }
-    $nick_len=strlen($result["nick"]);
-    if ($nick_len>CONNECTION_ID_LEN)
-    {
-      $result["connection_id"]=substr($result["nick"],$nick_len-CONNECTION_ID_LEN);
-      $result["connection_id_nick"]=substr($result["nick"],0,$nick_len-CONNECTION_ID_LEN);
     }
   }
   return $result;
