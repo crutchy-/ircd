@@ -26,18 +26,11 @@ function cmd_who($client_index,$items)
       $hostname=$nicks[$chan_nick]["hostname"];
       $realname=$nicks[$chan_nick]["realname"];
       $ident_prefix=$nicks[$chan_nick]["connection"][0]["ident_prefix"];
-      $c=count($nicks[$nick]["connection"]);
-      for ($j=0;$j<$c;$j++)
-      {
-        $conn=$nicks[$nick]["connection"][$j];
-        $msg=":".SERVER_HOSTNAME." 352 $nick $chan $ident_prefix"."$username $hostname ".SERVER_HOSTNAME." $chan_nick H@ :0 $realname";
-        do_reply($conn["client_index"],$msg);
-      }
+      do_reply($client_index,":".SERVER_HOSTNAME." 352 $nick $chan $ident_prefix"."$username $hostname ".SERVER_HOSTNAME." $chan_nick H@ :0 $realname");
     }
+    # :irc.sylnt.us 315 crutchy #stuff :End of /WHO list.
+    do_reply($client_index,":".SERVER_HOSTNAME." 315 $nick $chan :End of /WHO list.");
   }
-  # :irc.sylnt.us 315 crutchy #stuff :End of /WHO list.
-  $msg=":".SERVER_HOSTNAME." 315 $nick $chan :End of /WHO list.";
-  do_reply($client_index,$msg);
 }
 
 #####################################################################################################

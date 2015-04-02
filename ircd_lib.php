@@ -120,6 +120,26 @@ function do_reply($client_index,$msg)
 
 #####################################################################################################
 
+function do_reply_nick($nick,$msg,$client_index=False)
+{
+  global $nicks;
+  $c=count($nicks[$nick]["connection"]);
+  for ($i=0;$i<$c;$i++)
+  {
+    $conn=$nicks[$nick]["connection"][$i];
+    if ($client_index!==False)
+    {
+      if ($conn["client_index"]==$client_index)
+      {
+        continue;
+      }
+    }
+    do_reply($conn["client_index"],$msg);
+  }
+}
+
+#####################################################################################################
+
 function construct_message($nick,$cmd,$params,$trailing)
 {
   global $nicks;
