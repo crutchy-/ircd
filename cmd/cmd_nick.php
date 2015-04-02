@@ -14,7 +14,11 @@ function cmd_nick($client_index,$items)
   {
     return;
   }
-  $nick=$items["params"];
+  $nick=trim($items["params"]);
+  if ($nick=="")
+  {
+    $nick=trim($items["trailing"]);
+  }
   if (isset($nicks[$nick])==False)
   {
     $nicks[$nick]=array();
