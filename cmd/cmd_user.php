@@ -7,6 +7,7 @@ function cmd_user($client_index,$items)
   global $nicks;
   global $connections;
   # USER crutchy crutchy 192.168.0.21 :crutchy
+  # USER HOSTSctl 8 * :APK
   # USER <username>[<connection id>] <hostname> <servername> :<realname>
   $nick=client_nick($client_index,False,False);
   $conn=connection_index($client_index);
@@ -17,7 +18,7 @@ function cmd_user($client_index,$items)
   $param_parts=explode(" ",$items["params"]);
   if (count($param_parts)<>3)
   {
-    do_reply($client,"ERROR: INCORRECT NUMBER OF PARAMS (NUMERIC 461)");
+    do_reply($client_index,"ERROR: INCORRECT NUMBER OF PARAMS (NUMERIC 461)");
     return;
   }
   $connection=$connections[$conn];

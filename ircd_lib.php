@@ -333,7 +333,7 @@ function random_string($count,$allowable="abcdefghijklmnopqrstuvwxyzABCDEFGHIJKL
 
 function log_msg($addr,$client_index,$data)
 {
-
+  # TODO
 }
 
 #####################################################################################################
