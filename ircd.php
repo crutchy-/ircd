@@ -126,6 +126,7 @@ while (True)
     }
     $addr="";
     socket_getpeername($read_client,$addr);
+    log_msg($addr,$client_index,$data);
     on_msg($client_index,$data);
   }
 }

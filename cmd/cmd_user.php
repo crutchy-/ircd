@@ -28,6 +28,7 @@ function cmd_user($client_index,$items)
     if ($nicks[$nick]["connection_id"]==$conn_id)
     {
       $connections[$conn]["authenticated"]=True;
+      do_reply($client,"SUCCESSFULLY AUTHENTICATED AS \"$nick\" USING CONNECTION ID \"$conn_id\"");
     }
     else
     {
