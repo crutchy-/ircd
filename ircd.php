@@ -15,7 +15,7 @@ define("CLIENT_TIMEOUT",60); # seconds
 
 define("SERVER_HOSTNAME","crutchy.local");
 define("MAX_DATA_LEN",1024);
-define("CONNECTION_ID_LEN",40);
+define("CONNECTION_ID_LEN",3); # make longer for prod
 
 require_once("include.php");
 require_once("ircd_lib.php");
