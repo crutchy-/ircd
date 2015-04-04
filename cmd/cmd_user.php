@@ -29,11 +29,11 @@ function cmd_user($client_index,$items)
     if ($nicks[$nick]["connection_id"]==$conn_id)
     {
       $connections[$conn]["authenticated"]=True;
-      do_reply($client,"SUCCESSFULLY AUTHENTICATED AS \"$nick\" USING CONNECTION ID \"$conn_id\"");
+      do_reply($client_index,"SUCCESSFULLY AUTHENTICATED AS \"$nick\" USING CONNECTION ID \"$conn_id\"");
     }
     else
     {
-      do_reply($client,"ERROR: CONNECTION ID MISMATCH");
+      do_reply($client_index,"ERROR: CONNECTION ID MISMATCH");
       return;
     }
   }
