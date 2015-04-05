@@ -34,15 +34,24 @@ function cmd_join($client_index,$items)
     $channels[$chan]["nicks"]=array();
   }
   $channels[$chan]["nicks"][]=$nick;
+  do_join($nick,$chan);
+}
+
+#####################################################################################################
+
+function do_join($nick,$channel,$client_index=False)
+{
+  global $nicks;
+  global $channels;
   $prefix=$nicks[$nick]["prefix"];
-  for ($i=0;$i<count($channels[$chan]["nicks"]);$i++)
+  for ($i=0;$i<count($channels[$channel]["nicks"]);$i++)
   {
-    do_reply_nick($channels[$chan]["nicks"][$i],":".$prefix." JOIN ".$chan);
+    do_reply_nick($channels[$channel]["nicks"][$i],":".$prefix." JOIN ".$channel,$client_index);
   }
-  do_reply_nick($nick,":".SERVER_HOSTNAME." 353 $nick = $chan :".implode(" ",$channels[$chan]["nicks"]));
-  do_reply_nick($nick,":".SERVER_HOSTNAME." 366 $nick $chan :End of /NAMES list.");
-  do_reply_nick($nick,":".SERVER_HOSTNAME." 324 $nick $chan +nt");
-  do_reply_nick($nick,":".SERVER_HOSTNAME." 329 $nick $chan ".time());
+  do_reply_nick($nick,":".SERVER_HOSTNAME." 353 $nick = $channel :".implode(" ",$channels[$channel]["nicks"]),$client_index);
+  do_reply_nick($nick,":".SERVER_HOSTNAME." 366 $nick $channel :End of /NAMES list.",$client_index);
+  do_reply_nick($nick,":".SERVER_HOSTNAME." 324 $nick $channel +nt",$client_index);
+  do_reply_nick($nick,":".SERVER_HOSTNAME." 329 $nick $channel ".time(),$client_index);
 }
 
 #####################################################################################################

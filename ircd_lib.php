@@ -191,16 +191,31 @@ function on_disconnect($client_index)
   {
     $addr=$connections[$connection_index]["addr"];
     $nick=connection_nick($client_index,$connections[$connection_index]);
-    unset($connections[$connection_index]);
     if ($nick!==False)
     {
-      unset($nicks[$nick]);
+      if (count($nicks[$nick]["connection"])==1)
+      {
+        unset($nicks[$nick]);
+      }
+      else
+      {
+        foreach ($nicks[$nick]["connection"] as $index => $conn)
+        {
+          if ($conn["client_index"]==$client_index)
+          {
+            unset($nicks[$nick]["connection"][$index]);
+            $nicks[$nick]["connection"]=array_values($nicks[$nick]["connection"]);
+            break;
+          }
+        }
+      }
       echo "*** CLIENT DISCONNECTED: $addr <$nick>\n";
     }
     else
     {
       echo "*** CLIENT DISCONNECTED: $addr\n";
     }
+    unset($connections[$connection_index]);
   }
 }
 

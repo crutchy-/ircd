@@ -6,6 +6,7 @@ function cmd_user($client_index,$items)
 {
   global $nicks;
   global $connections;
+  global $channels;
   # USER crutchy crutchy 192.168.0.21 :crutchy
   # USER HOSTSctl 8 * :APK
   # USER <username>[<connection id>] <hostname> <servername> :<realname>
@@ -30,6 +31,13 @@ function cmd_user($client_index,$items)
     {
       $connections[$conn]["authenticated"]=True;
       do_reply($client_index,"SUCCESSFULLY AUTHENTICATED AS \"$nick\" USING CONNECTION ID \"$conn_id\"");
+      foreach ($channels as $channel => $channel_data)
+      {
+        if (in_array($nick,$channels[$channel]["nicks"])==True)
+        {
+          do_join($nick,$channel);
+        }
+      }
     }
     else
     {

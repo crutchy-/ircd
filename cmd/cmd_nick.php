@@ -23,7 +23,6 @@ function cmd_nick($client_index,$items)
   {
     $nicks[$nick]=array();
     $nicks[$nick]["connection"][]=&$connections[$connection_index];
-    $nicks[$nick]["connection_index"][]=$connection_index;
     $connections[$connection_index]["authenticated"]=True;
     $addr=$connections[$connection_index]["addr"];
     $id=random_string(CONNECTION_ID_LEN);
@@ -35,7 +34,6 @@ function cmd_nick($client_index,$items)
   {
     $connections[$connection_index]["authenticated"]=False;
     $nicks[$nick]["connection"][]=&$connections[$connection_index];
-    $nicks[$nick]["connection_index"][]=$connection_index;
     $addr=$connections[$connection_index]["addr"];
     do_reply($client_index,"*** NICK MESSAGE RECEIVED FROM $addr: $nick (NOT AUTHENTICATED)");
   }
